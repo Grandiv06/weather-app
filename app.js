@@ -36,12 +36,12 @@ const renderCurrentWeather = (data) => {
 };
 
 const renderForecastWeather = (data) => {
-    forecastContainer.innerHTML = ""
-  data = data.list.filter((obj) => obj.dt_txt.endWith("12:00:00"));
+  forecastContainer.innerHTML = "";
+  data = data.list.filter((obj) => obj.dt_txt.endsWith("12:00:00")); // Fixed the method name
   data.forEach((i) => {
     const forecastJsx = `
             <div>
-                <img alt='wather icon' src="http://openweathermap.org/img/w/${
+                <img alt='weather icon' src="http://openweathermap.org/img/w/${
                   i.weather[0].icon
                 }.png" />
                 <h3>${DAYS[new Date(i.dt * 1000).getDay()]}</h3>
@@ -49,35 +49,35 @@ const renderForecastWeather = (data) => {
                 <span>${i.weather[0].main}</span>
             </div>
         `;
-    forecastContainer += forecastJsx;
+    forecastContainer.innerHTML += forecastJsx; // Fixed the container appending
   });
 };
 
 const getCurrentWeatherByName = async (city) => {
   const url = `${BASE_URL}/weather?q=${city}&appid=${API_KEY}&units=metric`;
   const response = await fetch(url);
-  const data = response.json();
+  const data = await response.json(); // Await the JSON parsing
   return data;
 };
 
 const getCurrentWeatherByCoordinates = async (lat, lon) => {
   const url = `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
   const response = await fetch(url);
-  const data = response.json();
+  const data = await response.json(); // Await the JSON parsing
   return data;
 };
 
 const getForecastWeatherByName = async (city) => {
   const url = `${BASE_URL}/forecast?q=${city}&appid=${API_KEY}&units=metric`;
   const response = await fetch(url);
-  const data = response.json();
+  const data = await response.json(); // Await the JSON parsing
   return data;
 };
 
 const getForecastWeatherByCoordinates = async (lat, lon) => {
   const url = `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
   const response = await fetch(url);
-  const data = response.json();
+  const data = await response.json(); // Await the JSON parsing
   return data;
 };
 
@@ -86,6 +86,7 @@ const searchHandler = async () => {
 
   if (!cityName) {
     alert("Please enter a city name..!");
+    return; // Added return to prevent further execution
   }
 
   const currentData = await getCurrentWeatherByName(cityName);
@@ -98,12 +99,12 @@ const positionCallback = async (position) => {
   const { latitude, longitude } = position.coords;
   const currentData = await getCurrentWeatherByCoordinates(latitude, longitude);
   renderCurrentWeather(currentData);
-  const forecastData = await getForecastWeatherByCoordinates(latitude, longitude)
-  renderForecastWeather(forecastData)
+  const forecastData = await getForecastWeatherByCoordinates(latitude, longitude);
+  renderForecastWeather(forecastData);
 };
 
-const errorCallback = (position) => {
-  console.log(error);
+const errorCallback = (error) => {
+  console.log(error); // Fixed missing error parameter
 };
 
 const locationHandler = () => {
