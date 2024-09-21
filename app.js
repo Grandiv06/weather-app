@@ -37,7 +37,7 @@ const renderCurrentWeather = (data) => {
 
 const renderForecastWeather = (data) => {
   forecastContainer.innerHTML = "";
-  data = data.list.filter((obj) => obj.dt_txt.endsWith("12:00:00")); // Fixed the method name
+  data = data.list.filter((obj) => obj.dt_txt.endsWith("12:00:00")); 
   data.forEach((i) => {
     const forecastJsx = `
             <div>
